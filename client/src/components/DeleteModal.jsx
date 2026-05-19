@@ -1,4 +1,4 @@
-// src/components/DeleteModal.js
+// src/components/DeleteModal.jsx
 import React from "react";
 
 const DeleteModal = ({ vehicle, onConfirm, onCancel, loading }) => {
@@ -20,7 +20,7 @@ const DeleteModal = ({ vehicle, onConfirm, onCancel, loading }) => {
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 bg-dark-700 hover:bg-dark-600 border border-dark-500 text-gray-300 
+            className="flex-1 bg-dark-700 hover:bg-dark-600 border border-dark-500 text-gray-300
                        py-2.5 rounded-xl font-body text-sm transition-all duration-200"
           >
             Cancel
@@ -28,7 +28,7 @@ const DeleteModal = ({ vehicle, onConfirm, onCancel, loading }) => {
           <button
             onClick={onConfirm}
             disabled={loading}
-            className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-xl 
+            className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-xl
                        font-body text-sm font-medium transition-all duration-200 disabled:opacity-50"
           >
             {loading ? "Deleting..." : "Delete"}

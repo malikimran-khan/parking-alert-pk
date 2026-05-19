@@ -1,4 +1,4 @@
-// src/components/FormInput.js
+// src/components/FormInput.jsx
 import React from "react";
 
 const FormInput = ({ label, name, value, onChange, error, placeholder, type = "text", icon }) => {
@@ -28,7 +28,7 @@ const FormInput = ({ label, name, value, onChange, error, placeholder, type = "t
       </div>
       {error && (
         <p className="text-xs text-red-400 font-body flex items-center gap-1">
-          <span>⚠</span> {error}
+          <span>!</span> {error}
         </p>
       )}
     </div>

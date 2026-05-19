@@ -1,30 +1,29 @@
-// src/pages/AdminLogin.js
+// src/pages/AdminLogin.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { getDocs, collection, query, limit } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { useAuth } from "../context/AuthContext.jsx";
+import { getDocs, collection, query, limit, addDoc } from "firebase/firestore";
+import { db } from "../firebase/config.js";
 
 const AdminLogin = () => {
   const { login, signup, currentUser } = useAuth();
   const navigate = useNavigate();
 
-  const [isFirstTime, setIsFirstTime] = useState(false);
+  const [isFirstTime, setIsFirstTime]     = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [form, setForm] = useState({ email: "", password: "", confirmPassword: "" });
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [errors, setErrors]       = useState({});
+  const [loading, setLoading]     = useState(false);
   const [serverError, setServerError] = useState("");
 
   useEffect(() => {
     if (currentUser) navigate("/admin/dashboard");
   }, [currentUser, navigate]);
 
-  // Check if any admin has ever signed up (by checking a Firestore marker)
   useEffect(() => {
     const checkAdminExists = async () => {
       try {
-        const q = query(collection(db, "admin_config"), limit(1));
+        const q    = query(collection(db, "admin_config"), limit(1));
         const snap = await getDocs(q);
         setIsFirstTime(snap.empty);
       } catch {
@@ -56,8 +55,6 @@ const AdminLogin = () => {
     try {
       if (isFirstTime) {
         await signup(form.email, form.password);
-        // Mark admin as created
-        const { addDoc } = await import("firebase/firestore");
         await addDoc(collection(db, "admin_config"), {
           createdAt: new Date().toISOString(),
           email: form.email,
@@ -67,11 +64,12 @@ const AdminLogin = () => {
       }
       navigate("/admin/dashboard");
     } catch (err) {
-      const msg = err.code === "auth/user-not-found" || err.code === "auth/wrong-password"
-        ? "Invalid email or password"
-        : err.code === "auth/email-already-in-use"
-        ? "Admin already exists. Please login."
-        : "Authentication failed. Try again.";
+      const msg =
+        err.code === "auth/user-not-found" || err.code === "auth/wrong-password"
+          ? "Invalid email or password"
+          : err.code === "auth/email-already-in-use"
+          ? "Admin already exists. Please login."
+          : "Authentication failed. Try again.";
       setServerError(msg);
     } finally {
       setLoading(false);
@@ -99,7 +97,7 @@ const AdminLogin = () => {
       <div className="relative z-10 w-full max-w-md animate-slide-up">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-brand-500 rounded-2xl flex items-center justify-center 
+          <div className="w-14 h-14 bg-brand-500 rounded-2xl flex items-center justify-center
                           text-white font-display font-extrabold text-2xl mx-auto mb-4 shadow-lg shadow-brand-500/30">
             P
           </div>
@@ -120,7 +118,6 @@ const AdminLogin = () => {
               🎉 First time setup detected. Create your admin credentials.
             </div>
           )}
-
           {serverError && (
             <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 mb-6 text-red-400 text-sm font-body">
               ⚠ {serverError}
@@ -128,15 +125,13 @@ const AdminLogin = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            {/* Email */}
             <div>
               <label className="text-sm font-medium text-gray-300 font-body mb-1.5 block">Email</label>
               <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
+                type="email" name="email" value={form.email} onChange={handleChange}
                 placeholder="admin@example.com"
-                className={`w-full bg-dark-700 border rounded-xl px-4 py-3 text-white 
+                className={`w-full bg-dark-700 border rounded-xl px-4 py-3 text-white
                   placeholder-dark-300 font-body text-sm outline-none transition-all
                   focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500
                   ${errors.email ? "border-red-500/70" : "border-dark-500 hover:border-dark-400"}`}
@@ -144,15 +139,13 @@ const AdminLogin = () => {
               {errors.email && <p className="text-xs text-red-400 mt-1 font-body">⚠ {errors.email}</p>}
             </div>
 
+            {/* Password */}
             <div>
               <label className="text-sm font-medium text-gray-300 font-body mb-1.5 block">Password</label>
               <input
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
+                type="password" name="password" value={form.password} onChange={handleChange}
                 placeholder="••••••••"
-                className={`w-full bg-dark-700 border rounded-xl px-4 py-3 text-white 
+                className={`w-full bg-dark-700 border rounded-xl px-4 py-3 text-white
                   placeholder-dark-300 font-body text-sm outline-none transition-all
                   focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500
                   ${errors.password ? "border-red-500/70" : "border-dark-500 hover:border-dark-400"}`}
@@ -160,16 +153,14 @@ const AdminLogin = () => {
               {errors.password && <p className="text-xs text-red-400 mt-1 font-body">⚠ {errors.password}</p>}
             </div>
 
+            {/* Confirm Password — only on first time */}
             {isFirstTime && (
               <div>
                 <label className="text-sm font-medium text-gray-300 font-body mb-1.5 block">Confirm Password</label>
                 <input
-                  type="password"
-                  name="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
+                  type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange}
                   placeholder="••••••••"
-                  className={`w-full bg-dark-700 border rounded-xl px-4 py-3 text-white 
+                  className={`w-full bg-dark-700 border rounded-xl px-4 py-3 text-white
                     placeholder-dark-300 font-body text-sm outline-none transition-all
                     focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500
                     ${errors.confirmPassword ? "border-red-500/70" : "border-dark-500 hover:border-dark-400"}`}
@@ -181,10 +172,9 @@ const AdminLogin = () => {
             )}
 
             <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-brand-500 hover:bg-brand-600 disabled:opacity-60 text-white 
-                         py-3.5 rounded-xl font-display font-semibold text-sm transition-all 
+              type="submit" disabled={loading}
+              className="w-full bg-brand-500 hover:bg-brand-600 disabled:opacity-60 text-white
+                         py-3.5 rounded-xl font-display font-semibold text-sm transition-all
                          duration-200 hover:scale-[1.02] mt-2 flex items-center justify-center gap-2"
             >
               {loading ? (
@@ -200,7 +190,10 @@ const AdminLogin = () => {
         </div>
 
         <p className="text-center text-gray-600 text-xs font-body mt-4">
-          ← <a href="/" className="text-brand-500 hover:text-brand-400 transition-colors">Back to submit form</a>
+          ←{" "}
+          <a href="/" className="text-brand-500 hover:text-brand-400 transition-colors">
+            Back to submit form
+          </a>
         </p>
       </div>
     </div>
