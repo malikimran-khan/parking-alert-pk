@@ -1,11 +1,11 @@
-// src/components/AdminNavbar.js
+// src/components/AdminNavbar.jsx
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 const AdminNavbar = () => {
   const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
+  const navigate                = useNavigate();
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -34,13 +34,15 @@ const AdminNavbar = () => {
       <div className="flex items-center gap-4">
         <div className="hidden sm:flex items-center gap-2">
           <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse-slow"></div>
-          <span className="text-gray-400 text-sm font-body truncate max-w-[180px]">{currentUser?.email}</span>
+          <span className="text-gray-400 text-sm font-body truncate max-w-[180px]">
+            {currentUser?.email}
+          </span>
         </div>
         <button
           onClick={handleLogout}
           disabled={loggingOut}
-          className="bg-dark-700 hover:bg-red-500/20 border border-dark-500 hover:border-red-500/50 
-                     text-gray-300 hover:text-red-400 px-4 py-2 rounded-xl text-sm font-body 
+          className="bg-dark-700 hover:bg-red-500/20 border border-dark-500 hover:border-red-500/50
+                     text-gray-300 hover:text-red-400 px-4 py-2 rounded-xl text-sm font-body
                      transition-all duration-200 flex items-center gap-2"
         >
           <span>↗</span>

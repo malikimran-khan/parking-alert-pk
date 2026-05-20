@@ -1,11 +1,11 @@
-// src/pages/AdminDashboard.js
+// src/pages/AdminDashboard.jsx
 import React, { useState, useMemo } from "react";
-import AdminNavbar from "../components/AdminNavbar";
-import StatsCard from "../components/StatsCard";
-import DeleteModal from "../components/DeleteModal";
-import Loader from "../components/Loader";
-import { useVehicles } from "../hooks/useVehicles";
-import { formatDate } from "../utils/validators";
+import AdminNavbar  from "../components/AdminNavbar.jsx";
+import StatsCard    from "../components/StatsCard.jsx";
+import DeleteModal  from "../components/DeleteModal.jsx";
+import Loader       from "../components/Loader.jsx";
+import { useVehicles } from "../hooks/useVehicles.js";
+import { formatDate }  from "../utils/validators.js";
 
 const COLOR_BADGE = {
   White:  "bg-gray-100/10 text-gray-300 border-gray-500/30",
@@ -22,9 +22,9 @@ const COLOR_BADGE = {
 
 const AdminDashboard = () => {
   const { vehicles, loading, error, deleteVehicle, refetch } = useVehicles();
-  const [search, setSearch] = useState("");
+  const [search, setSearch]           = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null);
-  const [deleting, setDeleting] = useState(false);
+  const [deleting, setDeleting]       = useState(false);
 
   const filtered = useMemo(() => {
     if (!search.trim()) return vehicles;
@@ -49,19 +49,18 @@ const AdminDashboard = () => {
     }
   };
 
-  // Stats
-  const colorCounts = useMemo(() => {
-    const map = {};
-    vehicles.forEach((v) => { map[v.vehicleColor] = (map[v.vehicleColor] || 0) + 1; });
-    return map;
-  }, [vehicles]);
-
   const todayCount = useMemo(() => {
     const today = new Date().toDateString();
     return vehicles.filter((v) => {
       const d = v.createdAt?.toDate ? v.createdAt.toDate() : new Date(v.createdAt);
       return d.toDateString() === today;
     }).length;
+  }, [vehicles]);
+
+  const colorCount = useMemo(() => {
+    const map = {};
+    vehicles.forEach((v) => { map[v.vehicleColor] = (map[v.vehicleColor] || 0) + 1; });
+    return Object.keys(map).length;
   }, [vehicles]);
 
   return (
@@ -75,47 +74,22 @@ const AdminDashboard = () => {
           <p className="text-gray-500 text-sm mt-1">Manage and monitor all vehicle submissions</p>
         </div>
 
-        {/* Stats */}
+        {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatsCard
-            title="Total Records"
-            value={vehicles.length}
-            icon="🚗"
-            color="orange"
-            subtitle="All time submissions"
-          />
-          <StatsCard
-            title="Today"
-            value={todayCount}
-            icon="📅"
-            color="blue"
-            subtitle="Submitted today"
-          />
-          <StatsCard
-            title="Search Results"
-            value={filtered.length}
-            icon="🔍"
-            color="green"
-            subtitle={search ? `Matching "${search}"` : "Showing all"}
-          />
-          <StatsCard
-            title="Colors"
-            value={Object.keys(colorCounts).length}
-            icon="🎨"
-            color="purple"
-            subtitle="Unique vehicle colors"
-          />
+          <StatsCard title="Total Records"   value={vehicles.length} icon="🚗" color="orange" subtitle="All time submissions" />
+          <StatsCard title="Today"           value={todayCount}      icon="📅" color="blue"   subtitle="Submitted today" />
+          <StatsCard title="Search Results"  value={filtered.length} icon="🔍" color="green"
+            subtitle={search ? `Matching "${search}"` : "Showing all"} />
+          <StatsCard title="Colors"          value={colorCount}      icon="🎨" color="purple" subtitle="Unique vehicle colors" />
         </div>
 
-        {/* Search & Table */}
+        {/* Table Card */}
         <div className="bg-dark-800 border border-dark-600 rounded-2xl overflow-hidden shadow-xl animate-slide-up">
           {/* Toolbar */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 border-b border-dark-600">
             <div>
               <h3 className="text-white font-display font-semibold text-lg">Vehicle Records</h3>
-              <p className="text-gray-500 text-xs mt-0.5">
-                {filtered.length} of {vehicles.length} records
-              </p>
+              <p className="text-gray-500 text-xs mt-0.5">{filtered.length} of {vehicles.length} records</p>
             </div>
             <div className="flex gap-3 w-full sm:w-auto">
               <div className="relative flex-1 sm:flex-none">
@@ -125,9 +99,9 @@ const AdminDashboard = () => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search by number, name, phone..."
-                  className="w-full sm:w-72 bg-dark-700 border border-dark-500 rounded-xl 
-                             pl-9 pr-4 py-2.5 text-white placeholder-dark-300 text-sm 
-                             outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 
+                  className="w-full sm:w-72 bg-dark-700 border border-dark-500 rounded-xl
+                             pl-9 pr-4 py-2.5 text-white placeholder-dark-300 text-sm
+                             outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500
                              transition-all"
                 />
                 {search && (
@@ -141,22 +115,20 @@ const AdminDashboard = () => {
               </div>
               <button
                 onClick={refetch}
-                className="bg-dark-700 border border-dark-500 hover:border-dark-400 text-gray-400 
-                           hover:text-white px-3 py-2.5 rounded-xl transition-all text-sm"
                 title="Refresh"
+                className="bg-dark-700 border border-dark-500 hover:border-dark-400 text-gray-400
+                           hover:text-white px-3 py-2.5 rounded-xl transition-all text-sm"
               >
                 ↺
               </button>
             </div>
           </div>
 
-          {/* Table */}
+          {/* Table Body */}
           {loading ? (
             <Loader text="Fetching vehicle records..." />
           ) : error ? (
-            <div className="p-8 text-center text-red-400 font-body text-sm">
-              ⚠ {error}
-            </div>
+            <div className="p-8 text-center text-red-400 font-body text-sm">⚠ {error}</div>
           ) : filtered.length === 0 ? (
             <div className="p-16 text-center">
               <div className="text-5xl mb-4">{search ? "🔍" : "📭"}</div>
@@ -183,14 +155,11 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody>
                   {filtered.map((v, i) => (
-                    <tr
-                      key={v.id}
-                      className="border-b border-dark-700/50 hover:bg-dark-700/30 transition-colors group"
-                    >
+                    <tr key={v.id} className="border-b border-dark-700/50 hover:bg-dark-700/30 transition-colors group">
                       <td className="px-4 py-4 text-gray-600 font-body text-xs">{i + 1}</td>
                       <td className="px-4 py-4 text-white font-body font-medium whitespace-nowrap">{v.vehicleName}</td>
                       <td className="px-4 py-4">
-                        <span className="bg-brand-500/15 border border-brand-500/30 text-brand-300 
+                        <span className="bg-brand-500/15 border border-brand-500/30 text-brand-300
                                          px-2.5 py-1 rounded-lg font-display font-semibold text-xs tracking-wider">
                           {v.vehicleNumber}
                         </span>
@@ -198,8 +167,7 @@ const AdminDashboard = () => {
                       <td className="px-4 py-4 text-gray-300 font-body whitespace-nowrap">{v.ownerName}</td>
                       <td className="px-4 py-4 text-gray-400 font-body whitespace-nowrap">{v.phoneNumber}</td>
                       <td className="px-4 py-4">
-                        <span className={`px-2.5 py-1 rounded-lg border text-xs font-body 
-                          ${COLOR_BADGE[v.vehicleColor] || COLOR_BADGE.Other}`}>
+                        <span className={`px-2.5 py-1 rounded-lg border text-xs font-body ${COLOR_BADGE[v.vehicleColor] || COLOR_BADGE.Other}`}>
                           {v.vehicleColor}
                         </span>
                       </td>
@@ -209,9 +177,9 @@ const AdminDashboard = () => {
                       <td className="px-4 py-4">
                         <button
                           onClick={() => setDeleteTarget(v)}
-                          className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 
-                                     hover:border-red-500/40 text-red-400 px-3 py-1.5 rounded-lg 
-                                     text-xs font-body transition-all duration-200 opacity-0 
+                          className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/20
+                                     hover:border-red-500/40 text-red-400 px-3 py-1.5 rounded-lg
+                                     text-xs font-body transition-all duration-200 opacity-0
                                      group-hover:opacity-100"
                         >
                           Delete
@@ -234,7 +202,6 @@ const AdminDashboard = () => {
         </div>
       </main>
 
-      {/* Delete Modal */}
       {deleteTarget && (
         <DeleteModal
           vehicle={deleteTarget}

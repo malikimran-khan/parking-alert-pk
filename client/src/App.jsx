@@ -1,13 +1,13 @@
-// src/App.js
+// src/App.jsx
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import ProtectedRoute from "./routes/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 
-import SubmitForm     from "./pages/SubmitForm";
-import AdminLogin     from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
-import NotFound       from "./pages/NotFound";
+import SubmitForm      from "./pages/SubmitForm.jsx";
+import AdminLogin      from "./pages/AdminLogin.jsx";
+import AdminDashboard  from "./pages/AdminDashboard.jsx";
+import NotFound        from "./pages/NotFound.jsx";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           <Route path="/"            element={<SubmitForm />} />
           <Route path="/admin/login" element={<AdminLogin />} />
 
-          {/* Protected Admin Routes */}
+          {/* Protected Admin */}
           <Route
             path="/admin/dashboard"
             element={

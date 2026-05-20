@@ -1,25 +1,25 @@
-// src/pages/SubmitForm.js
+// src/pages/SubmitForm.jsx
 import React, { useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase/config";
-import { validateVehicleForm } from "../utils/validators";
-import FormInput from "../components/FormInput";
+import { db } from "../firebase/config.js";
+import { validateVehicleForm } from "../utils/validators.js";
+import FormInput from "../components/FormInput.jsx";
 
 const COLORS = ["White", "Black", "Silver", "Red", "Blue", "Green", "Yellow", "Grey", "Brown", "Other"];
 
 const initialState = {
-  vehicleName: "",
+  vehicleName:   "",
   vehicleNumber: "",
-  ownerName: "",
-  phoneNumber: "",
-  vehicleColor: "",
+  ownerName:     "",
+  phoneNumber:   "",
+  vehicleColor:  "",
 };
 
 const SubmitForm = () => {
-  const [form, setForm] = useState(initialState);
-  const [errors, setErrors] = useState({});
+  const [form, setForm]         = useState(initialState);
+  const [errors, setErrors]     = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess]   = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +64,7 @@ const SubmitForm = () => {
           </p>
           <button
             onClick={() => setSuccess(false)}
-            className="bg-brand-500 hover:bg-brand-600 text-white px-8 py-3 rounded-xl font-body 
+            className="bg-brand-500 hover:bg-brand-600 text-white px-8 py-3 rounded-xl font-body
                        font-medium transition-all duration-200 hover:scale-105"
           >
             Submit Another
@@ -76,14 +76,14 @@ const SubmitForm = () => {
 
   return (
     <div className="min-h-screen bg-dark-900 relative overflow-hidden">
-      {/* Background decoration */}
+      {/* Background blobs */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brand-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blue-500/3 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-10 animate-fade-in">
-          <div className="inline-flex items-center gap-2 bg-brand-500/10 border border-brand-500/20 
+          <div className="inline-flex items-center gap-2 bg-brand-500/10 border border-brand-500/20
                           rounded-full px-4 py-1.5 mb-6">
             <span className="w-2 h-2 bg-brand-500 rounded-full animate-pulse-slow"></span>
             <span className="text-brand-400 text-xs font-body font-medium tracking-widest uppercase">
@@ -119,7 +119,6 @@ const SubmitForm = () => {
               placeholder="e.g. Toyota Corolla"
               icon="🚗"
             />
-
             <FormInput
               label="Vehicle Number"
               name="vehicleNumber"
@@ -129,7 +128,6 @@ const SubmitForm = () => {
               placeholder="e.g. AQW 1455"
               icon="🔢"
             />
-
             <FormInput
               label="Owner Name"
               name="ownerName"
@@ -139,7 +137,6 @@ const SubmitForm = () => {
               placeholder="Full name of vehicle owner"
               icon="👤"
             />
-
             <FormInput
               label="Phone Number"
               name="phoneNumber"
@@ -151,7 +148,7 @@ const SubmitForm = () => {
               icon="📱"
             />
 
-            {/* Vehicle Color */}
+            {/* Color Picker */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-gray-300 font-body tracking-wide">
                 Vehicle Color <span className="text-brand-500">*</span>
@@ -163,7 +160,8 @@ const SubmitForm = () => {
                     type="button"
                     onClick={() => {
                       setForm((prev) => ({ ...prev, vehicleColor: color }));
-                      if (errors.vehicleColor) setErrors((prev) => ({ ...prev, vehicleColor: "" }));
+                      if (errors.vehicleColor)
+                        setErrors((prev) => ({ ...prev, vehicleColor: "" }));
                     }}
                     className={`py-2 px-1 rounded-lg text-xs font-body border transition-all duration-200
                       ${form.vehicleColor === color
@@ -184,8 +182,8 @@ const SubmitForm = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-brand-500 hover:bg-brand-600 disabled:bg-brand-500/50 
-                         text-white py-3.5 rounded-xl font-display font-semibold text-sm 
+              className="w-full bg-brand-500 hover:bg-brand-600 disabled:bg-brand-500/50
+                         text-white py-3.5 rounded-xl font-display font-semibold text-sm
                          transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
                          disabled:cursor-not-allowed mt-2 flex items-center justify-center gap-2"
             >
@@ -201,9 +199,11 @@ const SubmitForm = () => {
           </form>
         </div>
 
-        {/* Footer */}
         <p className="text-center text-gray-600 text-xs font-body mt-6">
-          Admin? <a href="/admin/login" className="text-brand-500 hover:text-brand-400 transition-colors">Sign in here</a>
+          Admin?{" "}
+          <a href="/admin/login" className="text-brand-500 hover:text-brand-400 transition-colors">
+            Sign in here
+          </a>
         </p>
       </div>
     </div>
